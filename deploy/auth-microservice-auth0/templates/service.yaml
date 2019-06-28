@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "auth-microservice-auth0.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "auth-microservice-auth0.name" . }}
+    helm.sh/chart: {{ include "auth-microservice-auth0.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "auth-microservice-auth0.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
