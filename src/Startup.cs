@@ -78,7 +78,7 @@ namespace auth_microservice_auth0
 
                 // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
                 // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
-                options.CallbackPath = $"https://{sandboxAppOptions.Value.ExternalDNSName}/callback"; // new PathString("/callback");
+                options.CallbackPath = new PathString("/callback");
 
                 // Configure the Claims Issuer to be Auth0
                 options.ClaimsIssuer = "Auth0";
