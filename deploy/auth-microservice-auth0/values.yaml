@@ -69,7 +69,8 @@ virtualService:
   hosts: 
     - sandboxapps.ddns.net
   uriPrefixes:
-    - /auth/
+    - /auth
+    - /Auth
     - /callback
 
 resources: {}
