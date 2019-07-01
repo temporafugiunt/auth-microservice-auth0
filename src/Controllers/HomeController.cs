@@ -5,14 +5,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using auth_microservice_auth0.Models;
+using Microsoft.Extensions.Options;
+using Options;
 
 namespace auth_microservice_auth0.Controllers
 {
     public class HomeController : Controller
     {
+        public HomeController(IOptions<SandboxAppOptions> sandboxAppOptions)
+        {
+            SandboxAppOptions = sandboxAppOptions.Value;
+        }
+
+        private SandboxAppOptions SandboxAppOptions { get; }
+
         public IActionResult Index()
         {
-            return View();
+            return View(new HomeViewModel() { ExternalDNS = SandboxAppOptions.ExternalDNSName });
         }
 
         public IActionResult Privacy()
