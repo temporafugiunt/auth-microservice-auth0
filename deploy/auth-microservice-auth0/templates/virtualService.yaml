@@ -23,15 +23,14 @@ spec:
   {{- end }}
 {{- end }}
   http:
-  - match:
   {{- range .Values.virtualService.uriPrefixes }}
+  - match:
     - uri:
         prefix: {{ . | quote }}
-  {{- end }}
-    ignoreUriCase: true
     route:
     - destination:
         host: {{ $fullName }}
         port:
           number: {{ .Values.service.port }}
+  {{- end }}
 {{- end }}
