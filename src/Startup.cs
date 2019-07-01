@@ -126,7 +126,15 @@ namespace auth_microservice_auth0
             }
 
             // app.UsePathBase("/auth");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+            app.Use((context, next) =>
+            {
+                // Force https scheme behind Istio gateway to stop cookie correlation failures with Auth0:
+                // https://github.com/aspnet/Security/issues/1755
+                // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-2.1#when-it-isnt-possible-to-add-forwarded-headers-and-all-requests-are-secure
+                context.Request.Scheme = "https";
+                return next();
+            });
             app.UseStaticFiles();
             app.UseCookiePolicy();
 

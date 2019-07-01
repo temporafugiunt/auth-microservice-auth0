@@ -43,7 +43,7 @@ fullnameOverride: ""
 service:
   type: ClusterIP
   port: 3000
-  internalPort: 443
+  internalPort: 80
 
 ingress:
   enabled: false
