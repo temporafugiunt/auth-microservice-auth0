@@ -31,7 +31,7 @@ spec:
     headers:
       request:
         add:
-          X-Forwarded-Proto: https
+          X-Original-Proto: https
     route:
     - destination:
         host: {{ $fullName }}
@@ -44,7 +44,7 @@ spec:
     headers:
       request:
         add:
-          X-Forwarded-Proto: https
+          X-Original-Proto: https
     route:
     - destination:
         host: {{ $fullName }}
