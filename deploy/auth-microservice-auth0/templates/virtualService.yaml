@@ -1,5 +1,6 @@
 {{- if .Values.virtualService.enabled -}}
 {{- $fullName := include "auth-microservice-auth0.fullname" . -}}
+{{- $port := .Values.service.port -}}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -31,6 +32,6 @@ spec:
     - destination:
         host: {{ $fullName }}
         port:
-          number: {{ .Values.service.port }}
+          number: {{ $port }}
   {{- end }}
 {{- end }}
