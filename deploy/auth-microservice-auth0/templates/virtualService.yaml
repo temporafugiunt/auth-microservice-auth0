@@ -27,6 +27,7 @@ spec:
   {{- range .Values.virtualService.uriPrefixes }}
     - uri:
         prefix: {{ . | quote }}
+      ignoreUriCase: true
   {{- end }}
     route:
     - destination:
