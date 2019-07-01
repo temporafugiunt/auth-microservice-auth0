@@ -10,9 +10,9 @@ using Options;
 
 namespace auth_microservice_auth0.Controllers
 {
-    public class HomeController : Controller
+    public class AuthController : Controller
     {
-        public HomeController(IOptions<SandboxAppOptions> sandboxAppOptions)
+        public AuthController(IOptions<SandboxAppOptions> sandboxAppOptions)
         {
             SandboxAppOptions = sandboxAppOptions.Value;
         }
@@ -21,7 +21,7 @@ namespace auth_microservice_auth0.Controllers
 
         public IActionResult Index()
         {
-            return View(new HomeViewModel() { ExternalDNS = SandboxAppOptions.ExternalDNSName });
+            return View(new AuthViewModel() { ExternalDNS = SandboxAppOptions.ExternalDNSName });
         }
 
         public IActionResult Privacy()

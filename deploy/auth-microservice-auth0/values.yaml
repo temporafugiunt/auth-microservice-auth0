@@ -54,7 +54,7 @@ ingress:
     certmanager.k8s.io/cluster-issuer: letsencrypt-production-issuer
     kubernetes.io/tls-acme: "true"
   paths: 
-    - /login
+    - /auth
   hosts:
     - sandboxapps.ddns.net
   tls:
@@ -69,7 +69,7 @@ virtualService:
   hosts: 
     - sandboxapps.ddns.net
   uriPrefixes:
-    - /login/
+    - /auth/
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

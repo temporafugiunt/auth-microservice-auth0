@@ -5,7 +5,7 @@ namespace auth_microservice_auth0.Models
     /// <summary>
     /// The model for the Home Index View
     /// </summary>
-    public class HomeViewModel
+    public class AuthViewModel
     {
         /// <summary>
         /// The external DNS name that any application
