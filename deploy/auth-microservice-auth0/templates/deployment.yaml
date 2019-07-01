@@ -36,11 +36,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /Home/
-              port: https
+              port: http
           readinessProbe:
             httpGet:
               path: /Home/
-              port: https
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
