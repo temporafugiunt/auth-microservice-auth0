@@ -126,7 +126,7 @@ namespace auth_microservice_auth0
             }
 
             // app.UsePathBase("/auth");
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
