@@ -33,5 +33,15 @@ spec:
         host: {{ $fullName }}
         port:
           number: {{ $port }}
+  {{- end }}{{- range .Values.virtualService.uriExactMatches }}
+  - match:
+    - uri:
+        exact: {{ . | quote }}
+    route:
+    - destination:
+        host: {{ $fullName }}
+        port:
+          number: {{ $port }}
   {{- end }}
+
 {{- end }}
