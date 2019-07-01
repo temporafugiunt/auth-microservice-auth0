@@ -10,9 +10,9 @@ using Options;
 
 namespace auth_microservice_auth0.Controllers
 {
-    public class AuthController : Controller
+    public class HomeController : Controller
     {
-        public AuthController(IOptions<SandboxAppOptions> sandboxAppOptions)
+        public HomeController(IOptions<SandboxAppOptions> sandboxAppOptions)
         {
             SandboxAppOptions = sandboxAppOptions.Value;
         }

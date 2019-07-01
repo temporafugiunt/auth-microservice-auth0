@@ -122,9 +122,10 @@ namespace auth_microservice_auth0
             {
                 app.UseExceptionHandler("/Auth/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                // app.UseHsts();
             }
 
+            app.UsePathBase("/auth");
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -135,7 +136,7 @@ namespace auth_microservice_auth0
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
