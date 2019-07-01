@@ -65,7 +65,7 @@ ingress:
 virtualService:
   enabled: true
   gateways: 
-    - istio-system/apps-dyndns-gateway
+    - istio-system/sandboxapps-dyndns-gateway
   hosts: 
     - sandboxapps.ddns.net
   uriPrefixes:
