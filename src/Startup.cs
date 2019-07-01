@@ -135,7 +135,7 @@ namespace auth_microservice_auth0
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Auth}/{action=Index}/{id?}");
+                    template: "{controller}/{action=Index}/{id?}");
             });
         }
     }
