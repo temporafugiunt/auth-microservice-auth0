@@ -35,6 +35,8 @@ env:
       secretKeyRef:
         name: sts-env-secrets
         key: AUTH0_CLIENTSECRET
+  - name: ASPNETCORE_ENVIRONMENT
+    value: "Development"
 nameOverride: ""
 fullnameOverride: ""
 
