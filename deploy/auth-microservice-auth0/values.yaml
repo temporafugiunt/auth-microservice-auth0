@@ -70,7 +70,8 @@ virtualService:
     - sandboxapps.ddns.net
   uriPrefixes:
     - /auth/
-      /Auth/
+    - /Auth/
+    - /callback
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
