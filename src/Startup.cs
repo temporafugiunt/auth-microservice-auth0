@@ -97,7 +97,7 @@ namespace auth_microservice_auth0
                             {
                                 // transform to absolute
                                 var request = context.Request;
-                                postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+                                postLogoutUri = request.Scheme + "://" + sandboxAppOptions.Value.ExternalDNSName + request.PathBase + postLogoutUri;
                             }
                             logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
                         }
@@ -120,12 +120,12 @@ namespace auth_microservice_auth0
             }
             else
             {
-                app.UseExceptionHandler("/Auth/Error");
+                app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 // app.UseHsts();
             }
 
-            app.UsePathBase("/auth");
+            // app.UsePathBase("/auth");
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -136,7 +136,7 @@ namespace auth_microservice_auth0
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller}/{action=Index}/{id?}");
             });
         }
     }

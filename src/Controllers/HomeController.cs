@@ -21,7 +21,7 @@ namespace auth_microservice_auth0.Controllers
 
         public IActionResult Index()
         {
-            return View(new AuthViewModel() { ExternalDNS = SandboxAppOptions.ExternalDNSName });
+            return View(new HomeViewModel() { ExternalDNS = SandboxAppOptions.ExternalDNSName });
         }
 
         public IActionResult Privacy()

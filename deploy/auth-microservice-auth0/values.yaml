@@ -71,9 +71,14 @@ virtualService:
   hosts: 
     - sandboxapps.ddns.net
   uriPrefixes:
-    - /auth
-    - /Auth
+    - /home
+    - /Home
     - /callback
+    - /Account
+    - /account
+    - /js
+    - /lib
+    - /css
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
