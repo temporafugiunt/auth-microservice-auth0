@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Options;
 using Serilog;
 
@@ -25,6 +26,8 @@ namespace auth_microservice_auth0
         }
 
         public IHostingEnvironment HostingEnvironment { get; }
+        public Auth0Options Auth0Options { get; private set; }
+        public SandboxAppOptions SandboxAppOptions { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -39,6 +42,10 @@ namespace auth_microservice_auth0
             services.Configure<Auth0Options>(Program.Configuration.GetSection("AUTH0"));
             services.Configure<SandboxAppOptions>(Program.Configuration.GetSection("SANDBOXAPP"));
 
+            var sp = services.BuildServiceProvider();
+            Auth0Options = sp.GetService<IOptions<Auth0Options>>().Value;
+            SandboxAppOptions = sp.GetService<IOptions<SandboxAppOptions>>().Value;
+
             ConfigureOpenIDConnectServices(services);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -46,11 +53,7 @@ namespace auth_microservice_auth0
 
         private void ConfigureOpenIDConnectServices(IServiceCollection services)
         {
-            var sp = services.BuildServiceProvider();
-            var auth0Options = sp.GetService<IOptions<Auth0Options>>();
-            var sandboxAppOptions = sp.GetService<IOptions<SandboxAppOptions>>();
-
-            Log.Information($"Application running with an STS Domain of {auth0Options.Value.Domain} for the external domain {sandboxAppOptions.Value.ExternalDNSName}");
+            Log.Information($"Application running with an STS Domain of {Auth0Options.Domain} for the external domain {SandboxAppOptions.ExternalDNSName}");
 
             // Add authentication services
             services.AddAuthentication(options =>
@@ -63,11 +66,11 @@ namespace auth_microservice_auth0
             .AddOpenIdConnect("Auth0", options =>
             {
                 // Set the authority to your Auth0 domain
-                options.Authority = $"https://{auth0Options.Value.Domain}";
+                options.Authority = $"https://{Auth0Options.Domain}";
 
                 // Configure the Auth0 Client ID and Client Secret
-                options.ClientId = auth0Options.Value.ClientId;
-                options.ClientSecret = auth0Options.Value.ClientSecret;
+                options.ClientId = Auth0Options.ClientId;
+                options.ClientSecret = Auth0Options.ClientSecret;
 
                 // Set response type to code
                 options.ResponseType = "code";
@@ -75,6 +78,8 @@ namespace auth_microservice_auth0
                 // Configure the scope
                 options.Scope.Clear();
                 options.Scope.Add("openid");
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
 
                 // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
                 // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
@@ -88,7 +93,7 @@ namespace auth_microservice_auth0
                     // handle the logout redirection
                     OnRedirectToIdentityProviderForSignOut = (context) =>
                     {
-                        var logoutUri = $"https://{auth0Options.Value.Domain}/v2/logout?client_id={auth0Options.Value.ClientId}";
+                        var logoutUri = $"https://{Auth0Options.Domain}/v2/logout?client_id={Auth0Options.ClientId}";
 
                         var postLogoutUri = context.Properties.RedirectUri;
                         if (!string.IsNullOrEmpty(postLogoutUri))
@@ -97,7 +102,7 @@ namespace auth_microservice_auth0
                             {
                                 // transform to absolute
                                 var request = context.Request;
-                                postLogoutUri = request.Scheme + "://" + sandboxAppOptions.Value.ExternalDNSName + request.PathBase + postLogoutUri;
+                                postLogoutUri = request.Scheme + "://" + SandboxAppOptions.ExternalDNSName + request.PathBase + postLogoutUri;
                             }
                             logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
                         }
@@ -105,6 +110,30 @@ namespace auth_microservice_auth0
                         context.Response.Redirect(logoutUri);
                         context.HandleResponse();
 
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = (notification) =>
+                    {
+                        var emailAddress = notification.Principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
+                        if (emailAddress != null)
+                        {
+                            Log.Information($"OnTokenValidated for email {emailAddress.Value}.");
+                            if (emailAddress.Value.ToLower().Contains("mavenwave.com"))
+                            {
+                                Log.Information("User is a mavenwave account, adding token for beta environment");
+                                notification.Response.Cookies.Append("environment", "beta");
+                            }
+                            else
+                            {
+                                Log.Information("User is NOT a mavenwave account, adding token for production environment");
+                                notification.Response.Cookies.Append("environment", "production");
+                            }
+                        }
+                        else
+                        {
+                            Log.Information($"OnTokenValidated but email address not found, adding token for production environment");
+                            notification.Response.Cookies.Append("environment", "production");
+                        }
                         return Task.CompletedTask;
                     }
                 };
@@ -126,15 +155,19 @@ namespace auth_microservice_auth0
             }
 
             // app.UsePathBase("/auth");
-            //app.UseHttpsRedirection();
-            app.Use((context, next) =>
+            //app.UseHttpsRedirection();                
+            if (!SandboxAppOptions.ExternalDNSName.Contains("localhost"))
             {
-                // Force https scheme behind Istio gateway to stop cookie correlation failures with Auth0:
-                // https://github.com/aspnet/Security/issues/1755
-                // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-2.1#when-it-isnt-possible-to-add-forwarded-headers-and-all-requests-are-secure
-                context.Request.Scheme = "https";
-                return next();
-            });
+                app.Use((context, next) =>
+                {
+                    // Force https scheme behind Istio gateway to stop cookie correlation failures with Auth0:
+                    // https://github.com/aspnet/Security/issues/1755
+                    // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-2.1#when-it-isnt-possible-to-add-forwarded-headers-and-all-requests-are-secure
+                    context.Request.Scheme = "https";
+                    return next();
+                });
+            }
+
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
