@@ -28,10 +28,6 @@ spec:
   - match:
     - uri:
         prefix: {{ . | quote }}
-    headers:
-      request:
-        add:
-          X-Original-Proto: https
     route:
     - destination:
         host: {{ $fullName }}
@@ -41,10 +37,6 @@ spec:
   - match:
     - uri:
         exact: {{ . | quote }}
-    headers:
-      request:
-        add:
-          X-Original-Proto: https
     route:
     - destination:
         host: {{ $fullName }}

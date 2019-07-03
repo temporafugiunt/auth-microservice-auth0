@@ -13,6 +13,8 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "auth-microservice-auth0.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+      appNamespace: {{ .Release.Namespace }}
+      appVersion: {{ .Values.image.tag }}
   template:
     metadata:
       labels:
