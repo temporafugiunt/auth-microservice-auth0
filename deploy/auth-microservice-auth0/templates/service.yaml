@@ -7,6 +7,8 @@ metadata:
     helm.sh/chart: {{ include "auth-microservice-auth0.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    appNamespace: {{ .Release.Namespace }}
+    appVersion: {{ .Values.image.tag }}
 spec:
   type: {{ .Values.service.type }}
   ports:
