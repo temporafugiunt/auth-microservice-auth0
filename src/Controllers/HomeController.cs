@@ -12,10 +12,7 @@ namespace auth_microservice_auth0.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(IOptions<SandboxAppOptions> sandboxAppOptions)
-        {
-            SandboxAppOptions = sandboxAppOptions.Value;
-        }
+        public HomeController(IOptions<SandboxAppOptions> sandboxAppOptions) => SandboxAppOptions = sandboxAppOptions.Value;
 
         private SandboxAppOptions SandboxAppOptions { get; }
 
