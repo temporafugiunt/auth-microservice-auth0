@@ -20,7 +20,12 @@
                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"                
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "AUTH0__DOMAIN": "sandboxsignin.auth0.com",
+                "AUTH0__CLIENTID": "yTe08cqZwwnTyaxKzd2UylGVAZlufRB1",
+                "AUTH0__CLIENTSECRET": "nriQs1ZFdVgBh-ipXi6s2T8eiJDgnGVJ4G1CzfOvwl4lEF0-vtknX7fVBZIhdAe_",
+                "SANDBOXAPP__ENVIRONMENTNAME": "localdev",
+                "SANDBOXAPP__EXTERNALDNSNAME": "localhost:5000"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
