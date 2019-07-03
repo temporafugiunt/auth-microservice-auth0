@@ -135,6 +135,17 @@ namespace auth_microservice_auth0
                             notification.Response.Cookies.Append("environment", "production");
                         }
                         return Task.CompletedTask;
+                    },
+                    OnRemoteSignOut = (remoteSignOutContext) =>
+                    {
+                        // Expire environment cookie since user has logged out.
+                        var cookieOptions = new CookieOptions();
+                        cookieOptions.Expires = DateTime.Now.AddMonths(-1);
+                        cookieOptions.Domain = SandboxAppOptions.ExternalDNSName;
+                        remoteSignOutContext.Response.Cookies.Delete("environment");
+                        remoteSignOutContext.Response.Cookies.Append("environment", "", cookieOptions);
+
+                        return Task.CompletedTask;
                     }
                 };
             });
