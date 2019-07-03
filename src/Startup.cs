@@ -138,6 +138,8 @@ namespace auth_microservice_auth0
                     },
                     OnRemoteSignOut = (remoteSignOutContext) =>
                     {
+                        Log.Information($"OnRemoteSignOut(), removing environment cookie.");
+
                         // Expire environment cookie since user has logged out.
                         var cookieOptions = new CookieOptions();
                         cookieOptions.Expires = DateTime.Now.AddMonths(-1);
