@@ -34,8 +34,8 @@ namespace auth_microservice_auth0
     {
       services.Configure<CookiePolicyOptions>(options =>
       {
-              // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-              options.CheckConsentNeeded = context => HostingEnvironment.IsProduction();
+        // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+        options.CheckConsentNeeded = context => HostingEnvironment.IsProduction();
         options.MinimumSameSitePolicy = SameSiteMode.None;
       });
 
@@ -65,87 +65,87 @@ namespace auth_microservice_auth0
       .AddCookie()
       .AddOpenIdConnect("Auth0", options =>
       {
-              // Set the authority to your Auth0 domain
-              options.Authority = $"https://{Auth0Options.Domain}";
+        // Set the authority to your Auth0 domain
+        options.Authority = $"https://{Auth0Options.Domain}";
 
-              // Configure the Auth0 Client ID and Client Secret
-              options.ClientId = Auth0Options.ClientId;
+        // Configure the Auth0 Client ID and Client Secret
+        options.ClientId = Auth0Options.ClientId;
         options.ClientSecret = Auth0Options.ClientSecret;
 
-              // Set response type to code
-              options.ResponseType = "code";
+        // Set response type to code
+        options.ResponseType = "code";
 
-              // Configure the scope
-              options.Scope.Clear();
+        // Configure the scope
+        options.Scope.Clear();
         options.Scope.Add("openid");
         options.Scope.Add("profile");
         options.Scope.Add("email");
 
-              // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
-              // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
-              options.CallbackPath = new PathString("/callback");
+        // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
+        // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
+        options.CallbackPath = new PathString("/callback");
 
-              // Configure the Claims Issuer to be Auth0
-              options.ClaimsIssuer = "Auth0";
+        // Configure the Claims Issuer to be Auth0
+        options.ClaimsIssuer = "Auth0";
 
         options.Events = new OpenIdConnectEvents
         {
-                // handle the logout redirection
-                OnRedirectToIdentityProviderForSignOut = (context) =>
-                {
-                var logoutUri = $"https://{Auth0Options.Domain}/v2/logout?client_id={Auth0Options.ClientId}";
+          // handle the logout redirection
+          OnRedirectToIdentityProviderForSignOut = (context) =>
+          {
+            var logoutUri = $"https://{Auth0Options.Domain}/v2/logout?client_id={Auth0Options.ClientId}";
 
-                var postLogoutUri = context.Properties.RedirectUri;
-                if (!string.IsNullOrEmpty(postLogoutUri))
-                {
-                  if (postLogoutUri.StartsWith("/"))
-                  {
-                          // transform to absolute
-                          var request = context.Request;
-                    postLogoutUri = request.Scheme + "://" + SandboxAppOptions.ExternalDNSName + request.PathBase + postLogoutUri;
-                  }
-                  logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
-                }
-
-                context.Response.Redirect(logoutUri);
-                context.HandleResponse();
-
-                return Task.CompletedTask;
-              },
-          OnTokenValidated = (notification) =>
-                {
-                var emailAddress = notification.Principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
-                var prodEnv = "prod";
-                var betaEnv = "beta";
-                if (emailAddress != null)
-                {
-                  if (string.Compare(SandboxAppOptions.EnvironmentName, "dev") == 0)
-                  {
-                    prodEnv = "dev";
-                    betaEnv = "qa";
-                  }
-
-                  Log.Information($"OnTokenValidated for email {emailAddress.Value}.");
-                  if (emailAddress.Value.ToLower().Contains("mavenwave.com"))
-                  {
-
-                    Log.Information($"User is a mavenwave account, adding token for {betaEnv} environment");
-
-                    notification.Response.Cookies.Append("environment", betaEnv);
-                  }
-                  else
-                  {
-                    Log.Information($"User is NOT a mavenwave account, adding token for {prodEnv} environment");
-                    notification.Response.Cookies.Append("environment", prodEnv);
-                  }
-                }
-                else
-                {
-                  Log.Information($"OnTokenValidated but email address not found, adding token for {prodEnv} environment");
-                  notification.Response.Cookies.Append("environment", prodEnv);
-                }
-                return Task.CompletedTask;
+            var postLogoutUri = context.Properties.RedirectUri;
+            if (!string.IsNullOrEmpty(postLogoutUri))
+            {
+              if (postLogoutUri.StartsWith("/"))
+              {
+                // transform to absolute
+                var request = context.Request;
+                postLogoutUri = request.Scheme + "://" + SandboxAppOptions.ExternalDNSName + request.PathBase + postLogoutUri;
               }
+              logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
+            }
+
+            context.Response.Redirect(logoutUri);
+            context.HandleResponse();
+
+            return Task.CompletedTask;
+          },
+          OnTokenValidated = (notification) =>
+          {
+            var emailAddress = notification.Principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
+            var prodEnv = "prod";
+            var betaEnv = "beta";
+            if (emailAddress != null)
+            {
+              if (string.Compare(SandboxAppOptions.EnvironmentName, "dev") == 0)
+              {
+                prodEnv = "dev";
+                betaEnv = "qa";
+              }
+
+              Log.Information($"OnTokenValidated for email {emailAddress.Value}.");
+              if (emailAddress.Value.ToLower().Contains("mavenwave.com"))
+              {
+
+                Log.Information($"User is a mavenwave account, adding token for {betaEnv} environment");
+
+                notification.Response.Cookies.Append("environment", betaEnv);
+              }
+              else
+              {
+                Log.Information($"User is NOT a mavenwave account, adding token for {prodEnv} environment");
+                notification.Response.Cookies.Append("environment", prodEnv);
+              }
+            }
+            else
+            {
+              Log.Information($"OnTokenValidated but email address not found, adding token for {prodEnv} environment");
+              notification.Response.Cookies.Append("environment", prodEnv);
+            }
+            return Task.CompletedTask;
+          }
         };
       });
     }
@@ -170,10 +170,10 @@ namespace auth_microservice_auth0
       {
         app.Use((context, next) =>
         {
-                  // Force https scheme behind Istio gateway to stop cookie correlation failures with Auth0:
-                  // https://github.com/aspnet/Security/issues/1755
-                  // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-2.1#when-it-isnt-possible-to-add-forwarded-headers-and-all-requests-are-secure
-                  context.Request.Scheme = "https";
+          // Force https scheme behind Istio gateway to stop cookie correlation failures with Auth0:
+          // https://github.com/aspnet/Security/issues/1755
+          // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-2.1#when-it-isnt-possible-to-add-forwarded-headers-and-all-requests-are-secure
+          context.Request.Scheme = "https";
           return next();
         });
       }

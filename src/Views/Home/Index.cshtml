@@ -6,4 +6,13 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>This microservice provides Authorzation and Authentication Services for the domain <b>@Model.ExternalDNS</b></p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p>You are an authenticated user set to login to the <b>@Model.environment</b> environment.</p>
+        <a href=@Model.href>Login</a>
+    }
+    else
+    {
+        <p>You need to Login to be redirected to a specific environment.</p>
+    }
 </div>
