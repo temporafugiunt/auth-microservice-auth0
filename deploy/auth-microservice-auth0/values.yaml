@@ -58,18 +58,18 @@ ingress:
   paths: 
     - /auth
   hosts:
-    - sandboxapps.ddns.net
+    - dev-apps.devsandbox.co
   tls:
     - secretName: apps-dyndns-tls
       hosts:
-        - sandboxapps.ddns.net
+        - dev-apps.devsandbox.co
 
 virtualService:
   enabled: true
   gateways: 
     - istio-system/sandboxapps-dyndns-gateway
   hosts: 
-    - sandboxapps.ddns.net
+    - dev-apps.devsandbox.co
   uriPrefixes:
     - /home
     - /Home
