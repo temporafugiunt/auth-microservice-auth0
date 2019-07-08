@@ -9,5 +9,7 @@ namespace Options
         /// The external DNS name that any application
         /// </summary>
         public string ExternalDNSName { get; set; }
+
+        public string EnvironmentName { get; set; }
     }
 }
