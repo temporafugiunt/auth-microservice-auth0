@@ -60,14 +60,14 @@ ingress:
   hosts:
     - dev-apps.devsandbox.co
   tls:
-    - secretName: apps-dyndns-tls
+    - secretName: apps-devsandbox-tls
       hosts:
         - dev-apps.devsandbox.co
 
 virtualService:
   enabled: true
   gateways: 
-    - istio-system/sandboxapps-dyndns-gateway
+    - istio-system/apps-devsandbox-gateway
   hosts: 
     - dev-apps.devsandbox.co
     - apps.devsandbox.co
