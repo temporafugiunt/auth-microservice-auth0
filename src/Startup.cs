@@ -115,7 +115,7 @@ namespace auth_microservice_auth0
           OnTokenValidated = (notification) =>
           {
             var emailAddress = notification.Principal.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
-            var prodEnv = "prod";
+            var prodEnv = "production";
             var betaEnv = "beta";
             if (emailAddress != null)
             {
