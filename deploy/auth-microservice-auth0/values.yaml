@@ -80,6 +80,7 @@ virtualService:
     - /js
     - /lib
     - /css
+    - /img
   uriExactMatches:
     - /
 
