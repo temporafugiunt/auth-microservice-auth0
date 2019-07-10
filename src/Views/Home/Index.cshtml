@@ -4,15 +4,21 @@
 }
 
 <div class="text-center">
+    <img src="/img/salient-corp-logo.png" alt="Salient Corporation" />
     <h1 class="display-4">Welcome</h1>
+    <br />
     <p>This microservice provides Authorzation and Authentication Services for the domain <b>@Model.ExternalDNS</b></p>
     @if (User.Identity.IsAuthenticated)
     {
         <p>You are an authenticated user set to login to the <b>@Model.environment</b> environment.</p>
-        <a href="/app1">Redirect to App1</a>
+        <br />
+        <a href="/app1" class="btn btn-primary btn-lg">Redirect to App1</a>
+        <a asp-controller="Account" asp-action="Logout" class="btn btn-secondary btn-lg">Logout<span class="glyphicon glyphicon-log-out"></span></a>
     }
     else
     {
-        <p>You need to Login to be redirected to a specific environment.</p>
+        <p>You need to Login to be redirected to a specific environment.</p> 
+        <br /> 
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg">Login<span class="glyphicon glyphicon-log-in"></span></a>
     }
 </div>
