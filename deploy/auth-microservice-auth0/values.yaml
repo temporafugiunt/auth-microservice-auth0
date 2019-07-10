@@ -70,6 +70,7 @@ virtualService:
     - istio-system/sandboxapps-dyndns-gateway
   hosts: 
     - dev-apps.devsandbox.co
+    - apps.devsandbox.co
   uriPrefixes:
     - /home
     - /Home
