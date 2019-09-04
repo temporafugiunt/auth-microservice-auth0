@@ -7,17 +7,19 @@ metadata:
     helm.sh/chart: {{ include "auth-microservice-auth0.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app: {{ include "auth-microservice-auth0.name" . }}
+    version: {{ .Values.image.tag }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "auth-microservice-auth0.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app: {{ include "auth-microservice-auth0.name" . }}
+      version: {{ .Values.image.tag }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "auth-microservice-auth0.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        app: {{ include "auth-microservice-auth0.name" . }}
+        version: {{ .Values.image.tag }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.image.imagePullSecrets }}      

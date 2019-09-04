@@ -8,7 +8,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     appNamespace: {{ .Release.Namespace }}
-    appVersion: {{ .Values.image.tag }}
+    app: {{ include "mui-test-app1.name" . }}
+    version: {{ .Values.image.tag }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -17,5 +18,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "auth-microservice-auth0.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app: {{ include "auth-microservice-auth0.name" . }}
+    version: {{ .Values.image.tag }}
