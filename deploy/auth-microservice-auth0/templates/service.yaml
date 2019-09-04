@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     appNamespace: {{ .Release.Namespace }}
-    app: {{ include "mui-test-app1.name" . }}
+    app: {{ include "auth-microservice-auth0.name" . }}
     version: {{ .Values.image.tag }}
 spec:
   type: {{ .Values.service.type }}
