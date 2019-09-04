@@ -16,7 +16,7 @@ node
 
   if(!'None'.equalsIgnoreCase(env.NAMESPACE)) 
   {
-    deploy(buildInfo, repository, imageName)
+    deploy(buildInfo, repository, imageName, true)
   }
 }
 
